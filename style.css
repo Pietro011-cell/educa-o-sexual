@@ -1,4 +1,4 @@
-:root {
+root {  
   --main-color:#d3ad7f;
   --black: #13131a;
   --bg: #010103;
@@ -13,11 +13,19 @@ margin: 0;
  border:none;
  text-decoration:none;
  text-transform:capitalize ;
- transition: 0.2 linear;
+ transition: 0.2s linear;
+ font-family: "Roboto", sans-serif;
 }
 body {
  background-color: var(--bg);
  
+}
+
+section {
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  max-width: 1200px;
+
 }
 
 .header {
@@ -36,3 +44,38 @@ body {
  padding-top: 1.5rem;
  padding-bottom: 1.5rem;
 }
+
+.navbar a {
+    margin: 0 1rem;
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+.navbar a:hover {
+    color: var(--main-color);
+    border-bottom: 0.1rem solid var(--main-color);
+    padding-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.home-container {
+    background: url("foto");
+    height: 100vh;
+    background-position: center;
+    background-size: cover;   
+}
+
+.content {
+    max-width: 60rem;
+}
+
+.content h3 {
+    color: #fff;
+    font-size: 6rem;
+
+}
+
+.content p {
+    color: #fff;
+    font-size: 2rem;
+} 
