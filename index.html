@@ -1,47 +1,277 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>eduducação sexual </title>
+<meta charset="UTF-8">
+<title>Agente Infiltrado Online</title>
+
+<style>
+body{
+margin:0;
+font-family: Arial, sans-serif;
+
+/* degradê vertical com transição suave */
+background: linear-gradient(
+  to bottom,
+  #faf6f7 0%,
+  #bdbbbb 35%,
+  #373a3b 65%,
+  #1c1f25 100%
+);
+
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:white;
+}
+
+.card{
+background:;
+max-width:500px;
+margin:30px auto;
+padding:20px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+button{
+padding:10px 15px;
+margin:8px;
+border:none;
+border-radius:8px;
+background:#3498db;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2980b9;
+}
+
+.timer{
+font-size:28px;
+font-weight:bold;
+color:#c0392b;
+}
+</style>
 </head>
 
 <body>
-    <header clsas="header">
-        <section>
-            <a href="#" class="logo">
-                <img src="https://www.google.com/imgres?q=educa%C3%A7%C3%A3o%20sexual%20logo&imgurl=https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F3728%2F3728796.png&imgrefurl=https%3A%2F%2Fwww.flaticon.com%2Fbr%2Ficone-gratis%2Feducacao-sexual_3728796&docid=hrZR8GnUXqXhNM&tbnid=BIX8jG7hN5ugcM&vet=12ahUKEwj_kaDAoIeUAxUfrpUCHRJRKp0QnPAOegQIGBAB..i&w=512&h=512&hcb=2&itg=1&ved=2ahUKEwj_kaDAoIeUAxUfrpUCHRJRKp0QnPAOegQIGBAB"  
-                 alt="logo">
-            </a>
 
-            <nav class="navbar">
-                <a href="#home"> home</a>
-                <a href="#mudanças"> mudanças no corpo</a>
-                <a href="#orientação"> orientaçao sexual</a>
-                <a href="#diferença"> diferença de genero</a>
-                <a href="#assedio"> assedio</a>
-                <a href="#gravidez"> gravidez na adolescencia</a>
-            </nav>
+<div class="card">
+<h1>Agente Infiltrado</h1>
 
-            <div class="icons">
-            </div>
-        </section>
-    </header>
-    <div class="home-container"> 
-   <section id="#home">
-   <div class="content">
-    <h3>CONHECIMENTO NA ADOLESCENCIA</h3>
-    <P>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Commodi nisi pariatur rem laudantium blanditiis molestias nemo eaque, repellat illum corporis quaerat, perferendis dicta consectetur, tenetur suscipit ducimus debitis fugit non.</P>
+<div id="tela"></div>
+<div class="timer" id="timer"></div>
+</div>
 
-   </div>
-   </section>
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    </div>
+<script>
+// 🔴 COLE A CONFIG DO FIREBASE AQUI
+const firebaseConfig = {
+  apiKey: "AIzaSyDRoOF-TspNa6yG8a3kR40anwv_Ttyx0Xk",
+  authDomain: "jogo-impostor-f3ce6.firebaseapp.com",
+  projectId: "jogo-impostor-f3ce6",
+  storageBucket: "jogo-impostor-f3ce6.firebasestorage.app",
+  messagingSenderId: "523544579920",
+  appId: "1:523544579920:web:be686658a613119a38e655"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ================= BANCO =================
+const rodadas = [
+{
+tema:"Métodos Contraceptivos",
+palavras:["DIU","Camisinha","Implante","Pílula","DIU Hormonal"]
+},
+{
+tema:"ISTs",
+palavras:["HIV","Sífilis","HPV","Gonorreia","Clamídia"]
+},
+{
+tema:"Puberdade",
+palavras:["Acne","Menstruação","Pelos","Voz","Mamas"]
+}
+];
+
+// ================= VARIÁVEIS =================
+let sala = "";
+let nome = "";
+let papel = "";
+let infiltrado = false;
+let tempo = 180;
+let rodada = 0;
+
+// ================= ENTRAR =================
+function entrar(){
+document.getElementById("tela").innerHTML = `
+<h2>Entrar na sala</h2>
+
+<input id="nome" placeholder="Seu nome"><br><br>
+<input id="sala" placeholder="Código da sala"><br><br>
+
+<button onclick="iniciar()">Entrar</button>
+`;
+}
+
+// ================= INICIAR =================
+function iniciar(){
+
+nome = document.getElementById("nome").value;
+sala = document.getElementById("sala").value;
+
+sortearPapel();
+mostrar();
+cronometro();
+}
+
+// ================= SORTEIO =================
+function sortearPapel(){
+
+const r = rodadas[rodada];
+
+if(Math.random() < 0.2){
+papel = "INFILTRADO";
+infiltrado = true;
+}else{
+papel = r.palavras[
+Math.floor(Math.random()*r.palavras.length)
+];
+infiltrado = false;
+}
+
+// SALVA NO FIREBASE
+db.collection("salas")
+.doc(sala)
+.collection("jogadores")
+.doc(nome)
+.set({
+nome,
+papel,
+infiltrado
+});
+}
+
+// ================= TELA =================
+function mostrar(){
+
+document.getElementById("tela").innerHTML = `
+<h2>Rodada ${rodada+1}</h2>
+<h3>${rodadas[rodada].tema}</h3>
+
+<hr>
+
+<h2>${nome}</h2>
+
+<p style="font-size:24px">${papel}</p>
+
+<p>${infiltrado ?
+"Você é o INFILTRADO"
+:
+"Descubra quem é o infiltrado"
+}</p>
+
+<button onclick="votar()">Ir para votação</button>
+`;
+}
+
+// ================= TIMER =================
+function cronometro(){
+
+tempo = 180;
+
+let t = setInterval(()=>{
+
+tempo--;
+
+let m = Math.floor(tempo/60);
+let s = tempo%60;
+
+document.getElementById("timer").innerHTML =
+`${m}:${s.toString().padStart(2,"0")}`;
+
+if(tempo<=0){
+clearInterval(t);
+mostrarVotacao();
+}
+
+},1000);
+}
+
+// ================= VOTAÇÃO =================
+function votar(){
+
+db.collection("salas")
+.doc(sala)
+.collection("votos")
+.add({
+votante:nome,
+voto:""
+});
+
+document.getElementById("tela").innerHTML = `
+<h2>Votação</h2>
+
+<input id="voto" placeholder="Nome do suspeito"><br><br>
+
+<button onclick="enviarVoto()">Votar</button>
+<button onclick="verResultado()">Ver resultado</button>
+`;
+}
+
+
+function enviarVoto(){
+
+const voto = document.getElementById("voto").value;
+
+db.collection("salas")
+.doc(sala)
+.collection("votos")
+.add({
+votante:nome,
+voto:voto
+});
+
+alert("Voto enviado!");
+}
+
+// ================= RESULTADO REAL =================
+async function verResultado(){
+
+const snap = await db.collection("salas")
+.doc(sala)
+.collection("votos")
+.get();
+
+let contagem = {};
+
+snap.forEach(doc=>{
+let v = doc.data().voto;
+contagem[v] = (contagem[v]||0)+1;
+});
+
+let vencedor = Object.keys(contagem)
+.reduce((a,b)=>
+contagem[a] > contagem[b] ? a : b
+);
+
+document.getElementById("tela").innerHTML = `
+<h2>Resultado Final</h2>
+<p>Mais votado: <b>${vencedor}</b></p>
+<button onclick="location.reload()">Nova rodada</button>
+`;
+}
+
+// START
+entrar();
+
+</script>
+
 </body>
-
 </html>
